@@ -28,6 +28,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.1.2",
     "connect-loki": "^1.1.0",
+    "connect-memjs": "^0.2.1",
     "express": "^4.16.3",
     "express-server": "^0.7.0",
     "express-session": "^1.15.6",
