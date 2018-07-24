@@ -4,8 +4,11 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const session = require('express-session')
+const LokiStore = require('connect-loki')(session)
 const next = require('next')
 const ROUTES = require('./server/constants/routes').ROUTES
+
+require('dotenv').config()
 
 const dev = process.env.NODE_ENV !== 'production'
 const serverPort = process.env.PORT || 3000
@@ -26,13 +29,17 @@ app.prepare().then(() => {
     server.use(bodyParser.json())
     server.use(session({
         name: 'images-library-session',
-        secret: 'session-secret-key',
+        secret: 'fix-session-secret-key',
         resave: true,
         saveUninitialized: false,
         cookie: {
             secure: !dev,
             expires: new Date(253402300799999)
-        }
+        },
+        store: new LokiStore({
+            path: './storage/sessions/session-store.db',
+            logErrors: dev
+        })
     }));
 
     initializeXhrRoutes(server)
