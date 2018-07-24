@@ -24,11 +24,13 @@ const webpackModifier = function(config, options) {
 }
 
 const serverRuntimeConfig = { // Will only be available on the server side
-    //
+    API_CLIENT_ID: process.env.API_CLIENT_ID,
+    API_CLIENT_SECRET: process.env.API_CLIENT_SECRET
 }
 
 const publicRuntimeConfig = { // Will be available on both server and client
-    APP_URL: process.env.APP_URL
+    APP_URL: process.env.APP_URL,
+    API_BASE_URL: process.env.API_BASE_URL
 }
 
 module.exports = (phase, {
