@@ -8,11 +8,13 @@ const apiInitializer = require('../api')
 const AUTH_MIDDLEWARE = require('../middlewares/auth')
 const GUEST_MIDDLEWARE = require('../middlewares/guest')
 
+const dev = process.env.NODE_ENV !== 'production'
+
 let api = apiInitializer()
 
 const storage = multer.diskStorage({
   destination: function(req, file, callback) {
-      callback(null, './storage/tmp/');
+      callback(null, dev ? './storage/tmp/' : './tmp/');
   },
   filename: function(req, file, callback) {
       callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
@@ -44,8 +46,13 @@ router.post('/login', GUEST_MIDDLEWARE, (req, res) => {
       }
     })
   }).catch(err => {
-    let errorMessage = err.response.data.error || err.response.data.message
-    res.status(500).send(errorMessage)
+    console.log(err)
+    try {
+      let error = err.response.data.error || err.response.data.message
+      res.status(500).send(error)
+    } catch (e){
+      res.status(500).send(err.toString())
+    }
   })
 });
 

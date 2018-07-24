@@ -22,7 +22,7 @@ const app = next({
 const handle = app.getRequestHandler()
 
 const getSessionStore = () => {
-    if (dev) {
+    if (!dev) {
         return new LokiStore({
             path: './storage/sessions/session-store.db',
             logErrors: dev
@@ -31,6 +31,8 @@ const getSessionStore = () => {
 
     return new MemcachedStore({
         servers: [process.env.MEMCACHIER_SERVERS],
+        username: process.env.MEMCACHIER_USERNAME,
+        password: process.env.MEMCACHIER_PASSWORD,
         prefix: '_session_'
     })
 }
@@ -49,7 +51,7 @@ app.prepare().then(() => {
         saveUninitialized: false,
         cookie: {
             secure: !dev,
-            expires: new Date(253402300799999)
+            expires: 36288000
         },
         store: getSessionStore()
     }));
