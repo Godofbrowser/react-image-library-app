@@ -37,7 +37,7 @@ router.post('/login', GUEST_MIDDLEWARE, (req, res) => {
       token: resp.data.data.token.access_token,
     }
 
-    res.json({
+    res.status(200).json({
       'status': 'success',
       data: {
         user: req.session.user
@@ -61,7 +61,7 @@ router.post('/register', GUEST_MIDDLEWARE, (req, res) => {
       token: resp.data.data.token.access_token,
     }
 
-    res.json({
+    res.status(200).json({
       'status': 'success',
       data: {
         user: req.session.user
@@ -134,7 +134,7 @@ router.post('/images/upload', AUTH_MIDDLEWARE, (req, res) => {
 
     let formData = new FormData()
 
-    formData.append('name', req.body.name)
+    formData.append('name', name)
     formData.append('image', fs.createReadStream(file.path))
   
     api.images.upload(formData)

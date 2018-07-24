@@ -23,6 +23,14 @@ const webpackModifier = function(config, options) {
     return config
 }
 
+const serverRuntimeConfig = { // Will only be available on the server side
+    //
+}
+
+const publicRuntimeConfig = { // Will be available on both server and client
+    APP_URL: process.env.APP_URL
+}
+
 module.exports = (phase, {
     defaultConfig
 }) => {
@@ -30,13 +38,17 @@ module.exports = (phase, {
         return withSass({
             /* development only config options here */
             // distDir: 'build',
-            webpack: webpackModifier
+            webpack: webpackModifier,
+            serverRuntimeConfig,
+            publicRuntimeConfig
         })
     }
 
     return withSass({
         /* config options for all phases except development here */
         // distDir: 'build',
-        webpack: webpackModifier
+        webpack: webpackModifier,
+        serverRuntimeConfig,
+        publicRuntimeConfig
     })
 }
