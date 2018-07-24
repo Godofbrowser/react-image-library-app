@@ -16,7 +16,7 @@ module.exports = (token = null) => {
     }
 
     return {
-        auth: new AuthApi(httpClient, token),
-        images: new ImagesApi(httpClient, token)
+        auth: new AuthApi(httpClient),
+        images: new ImagesApi(httpClient)
     }
 }
