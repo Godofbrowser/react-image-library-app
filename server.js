@@ -22,7 +22,7 @@ const app = next({
 const handle = app.getRequestHandler()
 
 const getSessionStore = () => {
-    if (!dev) {
+    if (dev) {
         return new LokiStore({
             path: './storage/sessions/session-store.db',
             logErrors: dev
