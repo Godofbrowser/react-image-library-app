@@ -1,3 +1,16 @@
+# Image Library
+
+An image library built with ExpressJs, ReactJs, NextJs and Laravel
+
+## Key technologies
+- SPA with react
+- Server side rendering with nextjs
+- Oauth with laravel passport
+
+## Installation
+
+-   // Todo
+
 ## Improvements
 
 ### client
@@ -21,3 +34,18 @@
 6. Create separate endpoint for upload so user gets to fill in image details while upload and image processing is running in the background, before finally saving.
 7. Pagination
 8. Import configs and credentials
+
+## Known Bug
+
+The application allows users to view some content pages (home and images) as a guest and as an authentcated user.
+I have added a computed property `is_owner` to images such that the value is true if the current user is signed in and is the owner of the image, and false otherwise.
+Now, the problem is whenever a user views these pages  (home and images), the api doesn't seem to recognize them as authenticated and because of this the `is_owner` attribute becomes `false`. On the dashboard page which has the `auth` middleware, it works fine.
+
+## Todo
+
+
+- Fix known bug
+- During upload, show another interface after clicking on upload that allows user add name, tags and set visibility of images (Upload begins in the background to save time while user fills these details)
+- Implement rating
+- Export configuration variables and credentials
+- Update readme with installation process
