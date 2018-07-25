@@ -83,7 +83,7 @@ app.prepare().then(() => {
     })
 
     server.get('/auth/logout', (req, res) => {
-        req.session.user = null
+        req.session.destroy()
         return res.redirect(ROUTES.home)
     })
 

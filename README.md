@@ -49,8 +49,8 @@ Now, the problem is whenever a user views these pages  (home and images), the ap
 
 
 - Fix known bug (done)
+- Export configuration variables and credentials (done)
 - During upload, show another interface after clicking on upload that allows user add name, tags and set visibility of images (Upload begins in the background to save time while user fills these details)
 - Implement rating
-- Export configuration variables and credentials (done)
 - Update readme with installation process
 - Add axios http response interceptor to handle errors
