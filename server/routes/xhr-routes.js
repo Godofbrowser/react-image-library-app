@@ -1,31 +1,49 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs')
-const multer  = require('multer')
 const FormData = require('form-data')
+const multer = require('multer')
 
 const apiInitializer = require('../api')
 const AUTH_MIDDLEWARE = require('../middlewares/auth')
 const GUEST_MIDDLEWARE = require('../middlewares/guest')
 
-const dev = process.env.NODE_ENV !== 'production'
-
 let api = apiInitializer()
 
+const tmpImageUploadPath = "./static/tmp"
 const storage = multer.diskStorage({
-  destination: function(req, file, callback) {
-      callback(null, true ? './storage/tmp/' : './tmp/');
+  destination: function (req, file, callback) {
+    callback(null, tmpImageUploadPath);
   },
-  filename: function(req, file, callback) {
-      callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
   }
 });
 
-const upload = multer({storage, preservePath: true})
+const upload = multer({
+  storage,
+  preservePath: false
+})
 
-router.use(function(req, res, next) {
-  if (req.session.user)
+const errorHandler = (err, req, res, code = 422) => {
+  let error
+  try {
+    error = err.response.data.error || err.response.data.message
+  } catch (e) {}
+
+  error = error || err.toString()
+
+  console.log(error)
+
+  return res.status(code).json({
+    error
+  })
+}
+
+router.use(function (req, res, next) {
+  if (req.session.user) {
     api = apiInitializer(req.session.user.token)
+  }
   next()
 })
 
@@ -50,7 +68,7 @@ router.post('/login', GUEST_MIDDLEWARE, (req, res) => {
     try {
       let error = err.response.data.error || err.response.data.message
       res.status(500).send(error)
-    } catch (e){
+    } catch (e) {
       res.status(500).send(err.toString())
     }
   })
@@ -82,16 +100,18 @@ router.post('/register', GUEST_MIDDLEWARE, (req, res) => {
 
 router.get('/images', (req, res) => {
   api.images.getAllUploads(req.body.page, req.body.perpage, req.body.search)
-  .then(resp => {
-    res.status(200).json({
-      status: 'success',
-      data: resp.data.data
+    .then(resp => {
+      res.status(200).json({
+        status: 'success',
+        data: resp.data.data
+      })
     })
-  })
-  .catch(err => {
-    let error = err.response.data.error || err.toString()
-    return res.status(500).json({error})
-  })
+    .catch(err => {
+      let error = err.response.data.error || err.toString()
+      return res.status(500).json({
+        error
+      })
+    })
 });
 
 router.get('/tags', (req, res) => {
@@ -104,67 +124,73 @@ router.get('/tag/:id/images', (req, res) => {
 
 router.get('/images/recent', (req, res) => {
   api.images.getRecentUploads(12)
-  .then(resp => {
-    res.status(200).json({
-      status: 'success',
-      data: resp.data.data
+    .then(resp => {
+      res.status(200).json({
+        status: 'success',
+        data: resp.data.data
+      })
     })
-  })
-  .catch(err => {
-    let error = err.response.data.error || err.toString()
-    return res.status(500).json({error})
-  })
+    .catch(err => {
+      let error = err.response.data.error || err.toString()
+      return res.status(500).json({
+        error
+      })
+    })
 });
 
 router.get('/user/images', AUTH_MIDDLEWARE, (req, res) => {
   api.images.getUserUploads(1)
-  .then(resp => {
-    res.status(200).json({
-      status: 'success',
-      data: resp.data.data
+    .then(resp => {
+      res.status(200).json({
+        status: 'success',
+        data: resp.data.data
+      })
     })
-  })
-  .catch(err => {
-    let error = err.response.data.error || err.toString()
-    return res.status(500).json({error})
-  })
+    .catch(err => errorHandler(err, req, res))
 });
 
 router.post('/images/upload', AUTH_MIDDLEWARE, (req, res) => {
   let sgUpload = upload.single('image')
-  sgUpload(req, res, function(err) {
+  sgUpload(req, res, function (err) {
     if (err) {
       console.log(err.toString())
-      return res.status(422).send({error: 'Something went wrong!'})
+      return res.status(422).send({
+        error: 'Something went wrong!'
+      })
     }
-    if (!req.file) return res.status(422).json({error: 'Please upload a file'})
+    if (!req.file) return res.status(422).json({
+      error: 'Please upload a file'
+    })
 
+    let name = req.body.name || ('Image ' + (new Date).toLocaleString())
     let file = req.file
-    let name = req.body.name || ('Demo ' + (new Date).toLocaleString())
+    let fileUrl = (() => {
+      let dirtyUrl = process.env.APP_URL 
+          dirtyUrl += tmpImageUploadPath.replace(/^(\.?.+?\/)(.+)$/gi, '/$2/')
+          dirtyUrl += file.filename
+          
+      return dirtyUrl.replace(/\\+/g, '/')
+    })();
 
-    let formData = new FormData()
+    let data = {
+      name, 
+      image_url: fileUrl
+    }
 
-    formData.append('image', fs.createReadStream(file.path))
-    formData.append('name', name)
+    console.log(data)
 
-    
-    console.log('Form data: ', formData)
-  
-    api.images.upload(formData)
+    api.images.upload(data)
       .then(resp => {
         res.json({
           status: 'success',
-          info: 'upload success'
+          info: resp.data.info || 'upload success'
         })
       })
-      .catch(err => {
-        let msg = err.response.data.error || err.toString()
-        res.status(500).json({error: msg})
-      })
+      .catch(err => errorHandler(err, req, res))
       .then(() => {
         fs.unlink(file.path, () => {})
       })
-  });
-});
+  })
+})
 
-module.exports = router;
+module.exports = router

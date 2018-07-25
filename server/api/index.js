@@ -8,7 +8,7 @@ const httpClient = axios.create({
     baseURL: BASE_URL
 })
 
-httpClient.defaults.timeout = 30000
+// httpClient.defaults.timeout = 60 * 1000
 
 module.exports = (token = null) => {
     if (token) {

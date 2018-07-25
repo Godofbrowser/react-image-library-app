@@ -1,6 +1,8 @@
 /node_modules
 /.next
 .env
+/static/tmp/*
+!/static/tmp/.gitkeep
 /storage/tmp/*
 !/storage/tmp/.gitkeep
 /storage/sessions/

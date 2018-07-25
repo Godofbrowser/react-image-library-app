@@ -53,3 +53,4 @@ Now, the problem is whenever a user views these pages  (home and images), the ap
 - Implement rating
 - Export configuration variables and credentials (done)
 - Update readme with installation process
+- Add axios http response interceptor to handle errors

@@ -23,11 +23,10 @@ ImagesApi.prototype.getAllUploads = function (page = 1, perpage = 12, search = n
     })
 }
 
-ImagesApi.prototype.upload = function (formData) {
+ImagesApi.prototype.upload = function (payload) {
     let url = 'images/upload'
-    return this.client.post(url, formData, {
-        headers: formData.getHeaders()
-    })
+
+    return this.client.post(url, payload)
 }
 
 module.exports = ImagesApi
