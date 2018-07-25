@@ -140,7 +140,7 @@ router.post('/images/upload', AUTH_MIDDLEWARE, (req, res) => {
     if (!req.file) return res.status(422).json({error: 'Please upload a file'})
 
     let file = req.file
-    let name = req.body.name
+    let name = req.body.name || ('Demo ' + (new Date).toLocaleString())
 
     let formData = new FormData()
 

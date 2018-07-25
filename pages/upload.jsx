@@ -40,7 +40,7 @@ class UploadPage extends Component {
     this.state = {
       file: null,
       fileDataUrl: null,
-      filename: 'demo'
+      filename: 'Demo'
     };
 
     this.refDropzone = React.createRef();
