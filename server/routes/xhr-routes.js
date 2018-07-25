@@ -142,12 +142,13 @@ router.post('/images/upload', AUTH_MIDDLEWARE, (req, res) => {
     let file = req.file
     let name = req.body.name || ('Demo ' + (new Date).toLocaleString())
 
-    console.log('name: ' + name)
-
     let formData = new FormData()
 
     formData.append('image', fs.createReadStream(file.path))
     formData.append('name', name)
+
+    
+    console.log('Form data: ', formData)
   
     api.images.upload(formData)
       .then(resp => {
