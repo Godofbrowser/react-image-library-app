@@ -4,8 +4,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const session = require('express-session')
+const cookieSession = require('cookie-session')
 const LokiStore = require('connect-loki')(session)
-const MemcachedStore = require('connect-memjs')(session)
 const next = require('next')
 const ROUTES = require('./server/constants/routes').ROUTES
 
@@ -21,22 +21,6 @@ const app = next({
 
 const handle = app.getRequestHandler()
 
-const getSessionStore = () => {
-    if (dev) {
-        return new LokiStore({
-            path: './storage/sessions/session-store.db',
-            logErrors: dev
-        })
-    }
-
-    return new MemcachedStore({
-        servers: [process.env.MEMCACHIER_SERVERS],
-        username: process.env.MEMCACHIER_USERNAME,
-        password: process.env.MEMCACHIER_PASSWORD,
-        prefix: '_session_'
-    })
-}
-
 // Routes
 const initializeXhrRoutes = require('./server/routes')
 
@@ -44,17 +28,28 @@ app.prepare().then(() => {
     const server = express()
 
     server.use(bodyParser.json())
-    server.use(session({
-        name: 'images-library-session',
-        secret: 'some-jehldkdkwewh33j-jargon',
-        resave: true,
-        saveUninitialized: false,
-        cookie: {
-            secure: !dev,
-            expires: 36288000
-        },
-        store: getSessionStore()
-    }));
+
+    if (dev) {
+        server.use(session({
+            name: 'images-library-session',
+            secret: 'some-jehldkdkwewh33j-jargon',
+            resave: true,
+            saveUninitialized: false,
+            cookie: {
+                secure: !dev,
+                expires: 36288000
+            },
+            store: new LokiStore({
+                path: './storage/sessions/session-store.db',
+                logErrors: dev
+            })
+        }))
+    } else {
+        server.use(cookieSession({
+            secret: 'some-jehldkdkwewh33j-jargon',
+            signed: true,
+        }))
+    }
 
     initializeXhrRoutes(server)
 

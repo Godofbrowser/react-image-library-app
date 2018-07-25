@@ -39,7 +39,7 @@ See [App repository](https://github.com/Godofbrowser/react-image-library-app)
 7. Pagination
 8. Import configs and credentials (done)
 
-## Known Bug
+## Known Bug (fixed - added a helper method to check a list of guards and return the authenticated user if any)
 
 The application allows users to view some content pages (home and images) as a guest and as an authentcated user.
 I have added a computed property `is_owner` to images such that the value is true if the current user is signed in and is the owner of the image, and false otherwise.
@@ -48,7 +48,7 @@ Now, the problem is whenever a user views these pages  (home and images), the ap
 ## Todo
 
 
-- Fix known bug
+- Fix known bug (done)
 - During upload, show another interface after clicking on upload that allows user add name, tags and set visibility of images (Upload begins in the background to save time while user fills these details)
 - Implement rating
 - Export configuration variables and credentials (done)
