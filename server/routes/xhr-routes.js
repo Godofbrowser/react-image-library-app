@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
     callback(null, tmpImageUploadPath);
   },
   filename: function (req, file, callback) {
-    callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
+    callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname.replace(/\s/, ''));
   }
 });
 
