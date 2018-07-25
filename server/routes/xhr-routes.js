@@ -133,7 +133,7 @@ router.get('/user/images', AUTH_MIDDLEWARE, (req, res) => {
 router.post('/images/upload', AUTH_MIDDLEWARE, (req, res) => {
   let sgUpload = upload.single('image')
   sgUpload(req, res, function(err) {
-    if (err) return res.send({error: 'Something went wrong!'})
+    if (err) return res.status(422).send({error: 'Something went wrong!'})
     if (!req.file) return res.status(422).json({error: 'Please upload a file'})
 
     let file = req.file
