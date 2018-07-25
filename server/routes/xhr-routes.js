@@ -14,7 +14,7 @@ let api = apiInitializer()
 
 const storage = multer.diskStorage({
   destination: function(req, file, callback) {
-      callback(null, dev ? './storage/tmp/' : './tmp/');
+      callback(null, true ? './storage/tmp/' : './tmp/');
   },
   filename: function(req, file, callback) {
       callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
