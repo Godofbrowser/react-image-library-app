@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs')
-const FormData = require('form-data')
 const multer = require('multer')
 
 const apiInitializer = require('../api')
+let api = apiInitializer()
+
 const AUTH_MIDDLEWARE = require('../middlewares/auth')
 const GUEST_MIDDLEWARE = require('../middlewares/guest')
 
-let api = apiInitializer()
 
 const tmpImageUploadPath = "./static/tmp"
 const storage = multer.diskStorage({
@@ -63,39 +63,31 @@ router.post('/login', GUEST_MIDDLEWARE, (req, res) => {
         user: req.session.user
       }
     })
-  }).catch(err => {
-    console.log(err)
-    try {
-      let error = err.response.data.error || err.response.data.message
-      res.status(500).send(error)
-    } catch (e) {
-      res.status(500).send(err.toString())
-    }
   })
+  .catch(err => errorHandler(err, req, res))
 });
 
 router.post('/register', GUEST_MIDDLEWARE, (req, res) => {
   api.auth.register({
-    email: req.body.email,
-    name: req.body.name,
-    password: req.body.password,
-    password_confirmation: req.body.password_confirmation
-  }).then(resp => {
-    req.session.user = {
-      attributes: resp.data.data.user,
-      token: resp.data.data.token.access_token,
-    }
-
-    res.status(200).json({
-      'status': 'success',
-      data: {
-        user: req.session.user
-      }
+      email: req.body.email,
+      name: req.body.name,
+      password: req.body.password,
+      password_confirmation: req.body.password_confirmation
     })
-  }).catch(err => {
-    let errorMessage = err.response.data.error || err.response.data.message
-    res.status(500).send(errorMessage)
-  })
+    .then(resp => {
+      req.session.user = {
+        attributes: resp.data.data.user,
+        token: resp.data.data.token.access_token,
+      }
+
+      res.status(200).json({
+        'status': 'success',
+        data: {
+          user: req.session.user
+        }
+      })
+    })
+    .catch(err => errorHandler(err, req, res))
 });
 
 router.get('/images', (req, res) => {
@@ -130,12 +122,7 @@ router.get('/images/recent', (req, res) => {
         data: resp.data.data
       })
     })
-    .catch(err => {
-      let error = err.response.data.error || err.toString()
-      return res.status(500).json({
-        error
-      })
-    })
+    .catch(err => errorHandler(err, req, res))
 });
 
 router.get('/user/images', AUTH_MIDDLEWARE, (req, res) => {
@@ -165,15 +152,15 @@ router.post('/images/upload', AUTH_MIDDLEWARE, (req, res) => {
     let name = req.body.name || ('Image ' + (new Date).toLocaleString())
     let file = req.file
     let fileUrl = (() => {
-      let dirtyUrl = process.env.APP_URL 
-          dirtyUrl += tmpImageUploadPath.replace(/^(\.?.+?\/)(.+)$/gi, '/$2/')
-          dirtyUrl += file.filename
-          
+      let dirtyUrl = process.env.APP_URL
+      dirtyUrl += tmpImageUploadPath.replace(/^(\.?.+?\/)(.+)$/gi, '/$2/')
+      dirtyUrl += file.filename
+
       return dirtyUrl.replace(/\\+/g, '/')
     })();
 
     let data = {
-      name, 
+      name,
       image_url: fileUrl
     }
 

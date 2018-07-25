@@ -35,6 +35,7 @@ app.prepare().then(() => {
             name: 'images-library-session',
             secret: 'some-jehldkdkwewh33j-jargon',
             resave: true,
+            unset: 'destroy',
             saveUninitialized: false,
             cookie: {
                 secure: !dev,
