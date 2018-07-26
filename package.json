@@ -4,11 +4,11 @@
   "description": "A simple image library with react and next",
   "main": "server.js",
   "scripts": {
-    "dev": "node server.js",
-    "prod": "cross-env NODE_ENV=production node server.js",
     "build": "next build",
+    "dev": "node server.js",
+    "start": "cross-env NODE_ENV=production node server.js",
+    "prod": "npm run build && npm run start",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run prod",
     "heroku-postbuild": "npm run build"
   },
   "repository": {

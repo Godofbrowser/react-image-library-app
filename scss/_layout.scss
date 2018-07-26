@@ -5,13 +5,17 @@
 }
 @include media-breakpoint-down(xs) {
     .navbar-nav {
+        padding-top: 15px;
+        padding-bottom: 15px;
+
         .nav-item {
             &:first-child {
+
                 a {
                     border-top: 1px solid rgba(0, 0, 0, 0.2);
                 }
             }
-            
+
             a {
                 width: 100%;
                 padding: 8px 15px;

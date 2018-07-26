@@ -4,11 +4,10 @@
 const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
-const session = require('express-session')
-const cookieSession = require('cookie-session')
-const LokiStore = require('connect-loki')(session)
 const next = require('next')
 const ROUTES = require('./server/constants/routes').ROUTES
+const ensureHTTPSMiddleware = require('./server/middlewares/secure')
+const enableSessionMiddleware = require('./server/middlewares/session')
 
 require('dotenv').config()
 
@@ -29,29 +28,8 @@ app.prepare().then(() => {
     const server = express()
 
     server.use(bodyParser.json())
-
-    if (dev) {
-        server.use(session({
-            name: 'images-library-session',
-            secret: 'some-jehldkdkwewh33j-jargon',
-            resave: true,
-            unset: 'destroy',
-            saveUninitialized: false,
-            cookie: {
-                secure: !dev,
-                expires: 36288000
-            },
-            store: new LokiStore({
-                path: './storage/sessions/session-store.db',
-                logErrors: dev
-            })
-        }))
-    } else {
-        server.use(cookieSession({
-            secret: 'some-jehldkdkwewh33j-jargon',
-            signed: true,
-        }))
-    }
+    server.use(ensureHTTPSMiddleware)
+    server.use(enableSessionMiddleware)
 
     initializeXhrRoutes(server)
     
