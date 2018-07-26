@@ -2,9 +2,9 @@
 
 An image library built with ExpressJs, ReactJs, NextJs and Laravel
 
-See [Api repository](https://github.com/Godofbrowser/laravel-image-library-api)
+See [Api repository](https://github.com/Godofbrowser/laravel-image-library-api) - [live demo](http://image-library-app.herokuapp.com/)
 
-See [App repository](https://github.com/Godofbrowser/react-image-library-app)
+See [App repository](https://github.com/Godofbrowser/react-image-library-app) - [live demo](http://image-library-api.herokuapp.com/)
 
 ## Key technologies
 - SPA with react
