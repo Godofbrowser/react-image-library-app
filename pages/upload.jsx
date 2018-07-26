@@ -1,38 +1,38 @@
 import React, { Component } from "react";
 import Link from "next/link";
-import Router from 'next/router'
-import { loginUser } from '../store'
-import api from '../lib/api'
+import Router from "next/router";
+import { loginUser } from "../store";
+import api from "../lib/api";
 import { ROUTES } from "../server/constants/routes";
 
 import Layout from "../components/layout";
 
 const readFileData = file => {
-  return new Promise(function (res, rej) {
-      var FR = new FileReader();
-      FR.onload = function () {
-          res(this.result)
-      }
-      FR.readAsDataURL(file)
-  })
-}
+  return new Promise(function(res, rej) {
+    var FR = new FileReader();
+    FR.onload = function() {
+      res(this.result);
+    };
+    FR.readAsDataURL(file);
+  });
+};
 
 class UploadPage extends Component {
-  static async getInitialProps({reduxStore, pathname, query, req}) {
-    const isServer = !!req
+  static async getInitialProps({ reduxStore, pathname, query, req }) {
+    const isServer = !!req;
     if (isServer && req.session.user) {
       await loginUser(
         reduxStore.dispatch,
         req.session.user.attributes,
         req.session.user.token
-      )
+      );
     }
 
     if (!isServer && !reduxStore.getState().user.authenticated) {
-      Router.push(ROUTES.auth.login)
+      Router.push(ROUTES.auth.login);
     }
 
-    return {  }
+    return {};
   }
 
   constructor(props) {
@@ -40,7 +40,7 @@ class UploadPage extends Component {
     this.state = {
       file: null,
       fileDataUrl: null,
-      filename: 'Demo'
+      filename: "Demo"
     };
 
     this.refDropzone = React.createRef();
@@ -48,15 +48,17 @@ class UploadPage extends Component {
   }
 
   componentDidMount() {
-    this.initializeDropzone()
+    this.initializeDropzone();
   }
 
   componentWillUnmount() {
-    this.initializeDropzone(true)
+    this.initializeDropzone(true);
   }
 
   initializeDropzone(unbind = false) {
-    const bindActionMethod = unbind ? 'removeEventListener' : 'addEventListener'
+    const bindActionMethod = unbind
+      ? "removeEventListener"
+      : "addEventListener";
 
     let dropzone = this.refDropzone.current;
     let uploadSection = this.refUploadSection.current;
@@ -67,14 +69,17 @@ class UploadPage extends Component {
       dropzone[bindActionMethod](eventName, this.unhighlight.bind(this), false);
     });
 
-    dropzone[bindActionMethod]("drop", this.handleDrop.bind(this))
+    dropzone[bindActionMethod]("drop", this.handleDrop.bind(this));
 
-    const inputFallback = document.querySelector('input#upload-input-fallback')
-    dropzone[bindActionMethod]("click", function () {
-      inputFallback.click()
-    })
+    const inputFallback = document.querySelector("input#upload-input-fallback");
+    dropzone[bindActionMethod]("click", function() {
+      inputFallback.click();
+    });
 
-    inputFallback[bindActionMethod]("change", this.handleInputChange.bind(this))
+    inputFallback[bindActionMethod](
+      "change",
+      this.handleInputChange.bind(this)
+    );
   }
 
   highlight(e) {
@@ -87,8 +92,8 @@ class UploadPage extends Component {
     this.refDropzone.current.classList.remove("active");
   }
 
-  handleInputChange (e) {
-    this.onSelectFileHandler(e.target.files[0])
+  handleInputChange(e) {
+    this.onSelectFileHandler(e.target.files[0]);
   }
 
   handleDrop(e) {
@@ -107,73 +112,91 @@ class UploadPage extends Component {
       this.setState({
         file,
         fileDataUrl: url
-      })
-    })
+      });
+    });
   }
 
-  onRemoveFileHandler (e) {
-    e.preventDefault()
-    this.setState({
-      file: null,
-      fileDataUrl: null
-    }, () => {
-      this.initializeDropzone()
-    })
+  onRemoveFileHandler(e) {
+    e.preventDefault();
+    this.setState(
+      {
+        file: null,
+        fileDataUrl: null
+      },
+      () => {
+        this.initializeDropzone();
+      }
+    );
   }
 
   onClickUpload(e) {
     let payload = {
       image: this.state.file,
       name: this.state.filename
-    }
+    };
 
-    api.images.upload(payload)
-    .then(resp => {
-      Router.push(ROUTES.app.dashboard)
-      alert(resp.data.info || 'success')
-    })
-    .catch(err => {
-      console.log(err.toString())
-    })
+    api.images
+      .upload(payload)
+      .then(resp => {
+        Router.push(ROUTES.app.dashboard);
+        alert(resp.data.info || "success");
+      })
+      .catch(err => {
+        console.log(err.toString());
+      });
   }
 
   render() {
     return (
       <Layout title={"Upload"} pageId="page-upload">
         <div className="container">
-
-        {(this.state.file == null) ? (
-          <section ref={this.refUploadSection} className="upload-section mb-4">
-            <input
-              id="upload-input-fallback"
-              type="file"
-              name="image"
-              accept="image/png,image/jpg"
-              className="d-none"
-            />
-            <div ref={this.refDropzone} className="upload-section__dropzone">
-              <span>Drag and Drop image here</span>
-            </div>
-          </section>
-
-        ) : (
-
-          <section id="preview" className="preview-section mb-4">
-            <div className="preview-canvas mb-5">
-              <div className="preview-img-cont">
-                <img src={this.state.fileDataUrl} id="preview-img" className="preview-img" />
+          {this.state.file == null ? (
+            <section
+              ref={this.refUploadSection}
+              className="upload-section section--elevated mb-4"
+            >
+              <input
+                id="upload-input-fallback"
+                type="file"
+                name="image"
+                accept="image/png,image/jpg"
+                className="d-none"
+              />
+              <div ref={this.refDropzone} className="upload-section__dropzone">
+                <span className="text-center">
+                  <strong>Drag and Drop</strong><br/>
+                 or <br/>
+                 <strong>Click to select</strong> an image
+                 </span>
               </div>
-            </div>
-          </section>
-        )}
+            </section>
+          ) : (
+            <section id="preview" className="preview-section section--elevated mb-4">
+              <div className="preview-canvas mb-5">
+                <div className="preview-img-cont">
+                  <img
+                    src={this.state.fileDataUrl}
+                    id="preview-img"
+                    className="preview-img"
+                  />
+                </div>
+              </div>
+            </section>
+          )}
 
           <div className="d-flex align-contents-center justify-content-between">
-          <Link href={ROUTES.home}>
-            <a id="analyze-img" className="btn btn-outline-dark btn-lg" onClick={this.onRemoveFileHandler.bind(this)}>
+            <button
+              id="analyze-img"
+              className="btn btn-outline-dark btn-lg"
+              onClick={this.onRemoveFileHandler.bind(this)}
+            >
               Remove
-            </a>
-          </Link>
-            <button id="analyze-img" className="btn btn-primary btn-lg" onClick={this.onClickUpload.bind(this)}>
+            </button>
+            <button
+              id="analyze-img"
+              className="btn btn-primary btn-lg"
+              onClick={this.onClickUpload.bind(this)}
+            >
               Upload
             </button>
           </div>
