@@ -51,27 +51,30 @@ class UploadPage extends Component {
     this.initializeDropzone()
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    this.initializeDropzone(true)
+  }
 
-  initializeDropzone() {
+  initializeDropzone(unbind = false) {
+    const bindActionMethod = unbind ? 'removeEventListener' : 'addEventListener'
+
     let dropzone = this.refDropzone.current;
     let uploadSection = this.refUploadSection.current;
     ["dragenter", "dragover"].forEach(eventName => {
-      dropzone.addEventListener(eventName, this.highlight.bind(this), false);
+      dropzone[bindActionMethod](eventName, this.highlight.bind(this), false);
     });
     ["dragleave", "drop"].forEach(eventName => {
-      dropzone.addEventListener(eventName, this.unhighlight.bind(this), false);
+      dropzone[bindActionMethod](eventName, this.unhighlight.bind(this), false);
     });
 
-    dropzone.addEventListener("drop", this.handleDrop.bind(this))
+    dropzone[bindActionMethod]("drop", this.handleDrop.bind(this))
 
     const inputFallback = document.querySelector('input#upload-input-fallback')
-    dropzone.addEventListener("click", function () {
+    dropzone[bindActionMethod]("click", function () {
       inputFallback.click()
     })
 
-    inputFallback.addEventListener("change", this.handleInputChange.bind(this))
-
+    inputFallback[bindActionMethod]("change", this.handleInputChange.bind(this))
   }
 
   highlight(e) {
