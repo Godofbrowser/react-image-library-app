@@ -36,12 +36,14 @@ class Dashboard extends React.Component {
     return {images: images}
   }
   render() {
+    const { user } = this.props
+
     return (
       <Layout title={"Dashboard"}>
         <div className="container">
           <div className="jumbotron">
             <h1>Dashboard</h1>
-            <p>Welcome to your dashboard. Here you'll find all of your uploaded images</p>
+            <p>Hello {user.attributes.name}! Here you'll find all of your uploaded images</p>
           </div>
 
           <div className="container">

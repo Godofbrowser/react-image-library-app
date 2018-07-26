@@ -7,10 +7,12 @@ import {
 } from 'redux-devtools-extension'
 import thunkMiddleware from 'redux-thunk'
 
+const dev = process.env.NODE_ENV === 'development'
+
 const appInitialState = {
     user: {
         authenticated: false,
-        email: null,
+        attributes: {},
         accessToken: null
     }
 }
@@ -27,7 +29,7 @@ export const reducer = (state = appInitialState, action) => {
             return Object.assign({}, state, {
                 user: {
                     authenticated: true,
-                    email: action.email,
+                    attributes: action.attributes,
                     accessToken: action.accessToken
                 }
             })
@@ -35,7 +37,7 @@ export const reducer = (state = appInitialState, action) => {
             return Object.assign({}, state, {
                 user: {
                     authenticated: false,
-                    email: null,
+                    attributes: {},
                     accessToken: null
                 }
             })
@@ -56,7 +58,7 @@ export const serverRenderClock = (isServer) => dispatch => {
 export const loginUser = (dispatch, attributes, accessToken) => {
     return dispatch({
         type: actionTypes.LOGIN,
-        email: attributes.email,
+        attributes,
         accessToken: accessToken
     })
 }
@@ -67,6 +69,10 @@ export const logoutUser = dispatch => {
     })
 }
 
+const devEnhancer = composeWithDevTools(applyMiddleware(thunkMiddleware));
+const prodEnhancer = applyMiddleware(thunkMiddleware);
+const enhancer = dev ? devEnhancer : prodEnhancer;
+
 export function initializeStore(initialState = appInitialState) {
-    return createStore(reducer, initialState, composeWithDevTools(applyMiddleware(thunkMiddleware)))
+    return createStore(reducer, initialState, enhancer)
 }

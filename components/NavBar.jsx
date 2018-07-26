@@ -27,7 +27,7 @@ class NavBar extends React.Component {
 
     return (
       <nav className={classNames('navbar fixed-top navbar-expand-sm navbar-dark bg-primary')}>
-        <Link href={ROUTES.home}>
+        <Link href={ROUTES.home} prefetch>
           <a className="navbar-brand">Image Library</a>
         </Link>
         <Link href={ROUTES.app.upload}>
@@ -40,7 +40,7 @@ class NavBar extends React.Component {
           onClick={this.toggle}
           aria-controls="navbarSupportedContent"
           aria-expanded={ isOpen ? 'true' : 'false' }
-          aria-label="Toggle navigation"npm li
+          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon" />
         </button>
@@ -48,7 +48,7 @@ class NavBar extends React.Component {
         <div className={classNames("collapse navbar-collapse", {show: isOpen})} id="navbarSupportedContent">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link href={ROUTES.home}>
+              <Link href={ROUTES.home} prefetch>
                 <a className="nav-link">Home</a>
               </Link>
             </li>
@@ -56,11 +56,6 @@ class NavBar extends React.Component {
               <Link href={ROUTES.app.images}>
                 <a className="nav-link">Images</a>
               </Link>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                Tags
-              </a>
             </li>
             <li className="d-none d-sm-inline">
               <span className="text-light mx-3"> | </span>
@@ -77,10 +72,10 @@ class NavBar extends React.Component {
                 </span>
               ) : (
                 <span>
-                  <Link href={ROUTES.auth.login}>
+                  <Link href={ROUTES.auth.login} prefetch>
                     <a className="nav-link d-block d-sm-inline-block">Login</a>
                   </Link>
-                  <Link href={ROUTES.auth.register}>
+                  <Link href={ROUTES.auth.register} prefetch>
                     <a className="nav-link d-block d-sm-inline-block">Register</a>
                   </Link>
                 </span>
