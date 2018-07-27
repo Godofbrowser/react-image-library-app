@@ -9,6 +9,16 @@ const httpClient = axios.create({
 })
 
 // httpClient.defaults.timeout = 60 * 1000
+httpClient.interceptors.request.use(function (config) {
+    return config
+})
+
+httpClient.interceptors.response.use(undefined, function (error) {
+    if (error.response.status === 401) {
+        // refresh token: https://gist.github.com/Godofbrowser/bf118322301af3fc334437c683887c5f
+    }
+    return Promise.reject(error);
+})
 
 module.exports = (token = null) => {
     if (token) {

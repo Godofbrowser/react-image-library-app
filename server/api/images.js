@@ -29,4 +29,16 @@ ImagesApi.prototype.upload = function (payload) {
     return this.client.post(url, payload)
 }
 
+ImagesApi.prototype.updateImage = function (id, payload) {
+    let url = `image/${id}`
+
+    let data = {}
+
+    payload.name && (data['name'] = payload.name)
+    payload.tags && (data['tags'] = payload.tags)
+    payload.visibility && (data['visibility'] = payload.visibility)
+
+    return this.client.put(url, data)
+}
+
 module.exports = ImagesApi

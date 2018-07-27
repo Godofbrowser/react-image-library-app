@@ -1,7 +1,7 @@
 import { connect } from "react-redux"
 import Head from "next/head"
 import NavBar from './NavBar'
-import { ROUTES } from "../server/constants/routes"
+import { ToastContainer } from 'react-toastify'
 
 // Theme
 import "../scss/index.scss";
@@ -27,6 +27,8 @@ const Layout = ({ children, title = null, pageId = "", user }) => (
     >
       {children}
     </main>
+    
+    <ToastContainer/>
 
     <footer className="main-footer">
       <div className="container">

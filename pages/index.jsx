@@ -41,6 +41,16 @@ const Home =  (props) => {
           <Gallery images={props.images.map(imageMapper)}/>
           </div>
         </div>
+
+        <div className="container">
+        <hr className="my-5" />
+            <h3>Browse by Tags</h3>
+            <ul>
+              <li>Tag1</li>
+              <li>Tag2</li>
+              <li>Tag3</li>
+            </ul>
+        </div>
       </div>
     </Layout>
   );

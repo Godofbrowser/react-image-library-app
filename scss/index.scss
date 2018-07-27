@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /**
  *  Bootsrap the application's styles
  *  ===================================
@@ -30,9 +32,13 @@
 @import "node_modules/bootstrap/scss/jumbotron";
 @import "node_modules/bootstrap/scss/images";
 
+// React Toastify
+@import "node_modules/react-toastify/scss/main";
+
 // Application styles
 @import "./layout";
 @import "./modules/loader";
+@import "./shared/buttons";
 
 // Application pages
 @import './pages/upload.scss';

@@ -42,7 +42,10 @@ const errorHandler = (err, req, res, code = 422) => {
 
 router.use(function (req, res, next) {
   if (req.session.user) {
+    console.log('set token', req.session.user.attributes.name)
     api = apiInitializer(req.session.user.token)
+  } else {
+    api = apiInitializer(null)
   }
   next()
 })
@@ -170,7 +173,8 @@ router.post('/images/upload', AUTH_MIDDLEWARE, (req, res) => {
       .then(resp => {
         res.json({
           status: 'success',
-          info: resp.data.info || 'upload success'
+          info: resp.data.info || 'upload success',
+          data: resp.data.data || {}
         })
       })
       .catch(err => errorHandler(err, req, res))
@@ -178,6 +182,26 @@ router.post('/images/upload', AUTH_MIDDLEWARE, (req, res) => {
         fs.unlink(file.path, () => {})
       })
   })
+})
+
+router.put('/image/:id', AUTH_MIDDLEWARE, (req, res) => {
+  if(!req.body.name) {
+    return res.status(422).json({error: 'The name field can not be empty'})
+  }
+
+  api.images.updateImage(req.params.id, {
+    name: req.body.name,
+    visibility: req.body.visibility,
+    tags: req.body.tags
+  })
+  .then(resp => {
+    res.json({
+      status: 'success',
+      info: resp.data.info || 'Image updated',
+      data: resp.data.data || {}
+    })
+  })
+  .catch(err => errorHandler(err, req, res))
 })
 
 module.exports = router
