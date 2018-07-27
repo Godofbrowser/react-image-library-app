@@ -1,0 +1,5 @@
+.ReactGridGallery {
+    .tile-bottom-bar > div > span {
+        @extend .text-capitalize;
+    }
+}

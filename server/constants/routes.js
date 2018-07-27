@@ -11,7 +11,7 @@ module.exports = {
             upload: '/upload',
             images: '/images',
             tags: '/tags',
-            tagImages: '/tag/:id/images'
+            tagImages: '/tag/:slug/images'
         }
     }
 }

@@ -1,6 +1,7 @@
 const axios = require('axios')
 const ImagesApi = require('./images')
 const AuthApi = require('./auth')
+const TagsApi = require('./tags')
 
 const BASE_URL = process.env.API_BASE_URL
 
@@ -14,7 +15,7 @@ httpClient.interceptors.request.use(function (config) {
 })
 
 httpClient.interceptors.response.use(undefined, function (error) {
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
         // refresh token: https://gist.github.com/Godofbrowser/bf118322301af3fc334437c683887c5f
     }
     return Promise.reject(error);
@@ -27,6 +28,7 @@ module.exports = (token = null) => {
 
     return {
         auth: new AuthApi(httpClient),
-        images: new ImagesApi(httpClient)
+        images: new ImagesApi(httpClient),
+        tags: new TagsApi(httpClient),
     }
 }

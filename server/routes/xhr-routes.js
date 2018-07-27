@@ -109,14 +109,6 @@ router.get('/images', (req, res) => {
     })
 });
 
-router.get('/tags', (req, res) => {
-  res.status(200).json(['list tags'])
-});
-
-router.get('/tag/:id/images', (req, res) => {
-  res.status(200).json(['tag images'])
-});
-
 router.get('/images/recent', (req, res) => {
   api.images.getRecentUploads(12)
     .then(resp => {
@@ -167,8 +159,6 @@ router.post('/images/upload', AUTH_MIDDLEWARE, (req, res) => {
       image_url: fileUrl
     }
 
-    console.log(data)
-
     api.images.upload(data)
       .then(resp => {
         res.json({
@@ -199,6 +189,28 @@ router.put('/image/:id', AUTH_MIDDLEWARE, (req, res) => {
       status: 'success',
       info: resp.data.info || 'Image updated',
       data: resp.data.data || {}
+    })
+  })
+  .catch(err => errorHandler(err, req, res))
+})
+
+router.get('/tags', (req, res) => {
+  api.tags.getAllTags()
+  .then(resp => {
+    res.json({
+      status: 'success',
+      data: resp.data.data
+    })
+  })
+  .catch(err => errorHandler(err, req, res))
+})
+
+router.get('/tag/:slug/images', (req, res) => {
+  api.tags.getTagImages(req.params.slug)
+  .then(resp => {
+    res.json({
+      status: 'success',
+      data: resp.data.data
     })
   })
   .catch(err => errorHandler(err, req, res))

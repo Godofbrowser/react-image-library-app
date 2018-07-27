@@ -38,7 +38,9 @@
 // Application styles
 @import "./layout";
 @import "./modules/loader";
+@import "./modules/react-grid-gallery";
 @import "./shared/buttons";
 
 // Application pages
-@import './pages/upload.scss';
+@import './pages/home';
+@import './pages/upload';

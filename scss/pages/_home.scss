@@ -1,0 +1,26 @@
+#page-home {
+    section.tags-section {
+        .tags {
+            @extend .list-unstyled;
+            a {
+                text-decoration: none;
+            }
+            .tag {
+                display: inline-block;
+                margin: 0 15px 15px 0;
+
+                a {
+                    padding: 8px 15px;
+                    display: inline-block;
+                    color: $white;
+                    background-color: $primary;
+                    transition: transform 100ms ease-in-out;
+
+                    &:hover {
+                        transform: scale(1.07);
+                    }
+                }
+            }
+        }
+    }
+}

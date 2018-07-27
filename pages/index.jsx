@@ -1,6 +1,7 @@
 import React from "react";
 import {connect} from 'react-redux'
 import Link from "next/link";
+import { Link as CustomLink } from '../lib/routes'
 import { loginUser } from '../store'
 import { ROUTES } from "../server/constants/routes";
 import api from '../lib/api'
@@ -14,7 +15,7 @@ import SearchForm from '../components/Search'
 
 const Home =  (props) => {
   return (
-    <Layout title={"Home"}>
+    <Layout title={"Home"} pageId="page-home">
       <div>
         <div className="container mb-5">
           <div className="jumbotron">
@@ -38,19 +39,26 @@ const Home =  (props) => {
                     overflow: "auto",
                     marginTop: '55px'
             }}>
-          <Gallery images={props.images.map(imageMapper)}/>
+          <Gallery images={props.images.map(imageMapper)} enableImageSelection={false}/>
           </div>
         </div>
 
-        <div className="container">
-        <hr className="my-5" />
-            <h3>Browse by Tags</h3>
-            <ul>
-              <li>Tag1</li>
-              <li>Tag2</li>
-              <li>Tag3</li>
-            </ul>
-        </div>
+        <section className="tags-section">
+          <div className="container">
+              <hr className="my-5" />
+              <h3 className="mb-4">Search by Tags</h3>
+              <ul className="tags">
+                {props.tags.map(tag => (
+                  <li className="tag text-capitalize" key={tag.slug}>
+                    <CustomLink route={`/tag/${tag.slug}/images`} >
+                      <a href={`/tag/${tag.slug}/images`}>{tag.name}</a>
+                    </CustomLink>
+                  </li>
+                ))}
+              </ul>
+          </div>
+        </section>
+    
       </div>
     </Layout>
   );
@@ -68,11 +76,23 @@ Home.getInitialProps = async function ({reduxStore, pathname, query, req}) {
 
   let currentApi = isServer ? serverApi(reduxStore.getState().user.token) : api
 
-  let images = await currentApi.images.getRecentUploads().then(resp => {
-    return resp.data.data
-  })
+  let promises = []
 
-  return {images, query}
+  promises.push(currentApi.images.getRecentUploads().then(resp => {
+    return resp.data.data
+  }))
+
+  promises.push(currentApi.tags.getAllTags().then(resp => {
+    return resp.data.data
+  }))
+
+  return Promise.all(promises).then(results => {
+    return {
+      images: results[0],
+      tags: results[1],
+      query
+    }
+  })
 }
 
 function mapStateToProps (state) {

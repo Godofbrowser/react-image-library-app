@@ -5,6 +5,7 @@ const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 const next = require('next')
+const routes = require('./lib/routes')
 const ROUTES = require('./server/constants/routes').ROUTES
 const ensureHTTPSMiddleware = require('./server/middlewares/secure')
 const enableSessionMiddleware = require('./server/middlewares/session')
@@ -19,7 +20,7 @@ const app = next({
     quiet: !dev
 })
 
-const handle = app.getRequestHandler()
+const handle = routes.getRequestHandler(app) // app.getRequestHandler()
 
 // Routes
 const initializeXhrRoutes = require('./server/routes')
