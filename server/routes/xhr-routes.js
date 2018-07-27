@@ -94,7 +94,7 @@ router.post('/register', GUEST_MIDDLEWARE, (req, res) => {
 });
 
 router.get('/images', (req, res) => {
-  api.images.getAllUploads(req.body.page, req.body.perpage, req.body.search)
+  api.images.getAllUploads(req.body.page, req.body.perpage, req.query.search)
     .then(resp => {
       res.status(200).json({
         status: 'success',
