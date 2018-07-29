@@ -41,4 +41,12 @@ ImagesApi.prototype.updateImage = function (id, payload) {
     return this.client.put(url, data)
 }
 
+ImagesApi.prototype.submitRating = function (id, value) {
+    let url = `image/${id}/rating`
+
+    let data = {value}
+
+    return this.client.post(url, data)
+}
+
 module.exports = ImagesApi

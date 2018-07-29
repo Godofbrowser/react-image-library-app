@@ -5,10 +5,9 @@ import { connect } from "react-redux";
 import { ROUTES } from "../server/constants/routes";
 import api from '../lib/api'
 import serverApi from '../server/api'
-import Gallery from 'react-grid-gallery'
-import imageMapper from '../lib/util/image-mapper'
 
 import Layout from "../components/layout";
+import ImageGrid from "../components/ImageGrid";
 
 
 class Dashboard extends React.Component {
@@ -46,19 +45,10 @@ class Dashboard extends React.Component {
             <p>Hello {user.attributes.name}! Here you'll find all of your uploaded images</p>
           </div>
 
-          <div className="container">
+          <div className="container-fluid">
             <h3 className="display-5 text-center">My Images</h3>
 
-            <div style={{
-              display: "block",
-              minHeight: "1px",
-              width: "100%",
-              border: "1px solid #ddd",
-              overflow: "auto",
-              marginTop: '55px'
-            }}>
-              <Gallery images={this.props.images.map(imageMapper)}/>
-            </div>
+            <ImageGrid images={this.props.images} showProperties={true} />
           </div>
         </div>
       </Layout>

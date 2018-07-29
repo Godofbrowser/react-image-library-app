@@ -1,0 +1,69 @@
+.rating-stars {
+    &.sm {
+        .rating__label {
+            font-size: 18px;
+        }
+        @include media-breakpoint-down(sm) {
+            .rating__label {
+                font-size: 12px;
+            }
+        }
+    }
+    &.lg {
+        .rating__label {
+            font-size: 3rem;
+        }
+        @include media-breakpoint-down(sm) {
+            .rating__label {
+                font-size: 1.8rem;
+            }
+        }
+    }
+    /* use display:inline-flex to prevent whitespace issues. alternatively, you can put all the children of .rating-group on a single line */
+    .rating-group {
+        display: inline-flex;
+    }
+    /* make hover effect work properly in IE */
+    .rating__icon {
+        pointer-events: none;
+    }
+    /* hide radio inputs */
+    .rating__input {
+        display: none;
+        // position: absolute !important;
+        // left: -9999px !important;
+    }
+    /* set icon padding and size */
+    .rating__label {
+        cursor: pointer;
+        /* if you change the left/right padding, update the margin-right property of .rating__label--half as well. */
+        padding: 0 0.1em;
+        font-size: 2rem;
+    }
+    /* add padding and positioning to half star labels */
+    .rating__label--half {
+        padding-right: 0;
+        margin-right: -0.6em;
+        z-index: 2;
+    }
+    /* set default star color */
+    .rating__icon--star {
+        color: orange;
+    }
+    /* if any label is .active, make its following siblings grey */
+    .rating__label.active~.rating__label .rating__icon--star {
+        color: #ddd;
+    }
+    .rating-group:hover {
+        .rating__label.selectable {
+            .rating__icon--star {
+                color:orange;
+            }
+        }
+    }
+    .rating__label.selectable:hover {
+        &~.rating__label .rating__icon--star {
+            color: #ddd;
+        }
+    }
+}

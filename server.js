@@ -1,6 +1,8 @@
 // This file doesn't go through babel or webpack transformation.
 // Make sure the syntax and sources this file requires are compatible with the current node version you are running
 // See https://github.com/zeit/next.js/issues/1245 for discussions on Universal Webpack or universal Babel
+require('dotenv').config()
+
 const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -10,7 +12,6 @@ const ROUTES = require('./server/constants/routes').ROUTES
 const ensureHTTPSMiddleware = require('./server/middlewares/secure')
 const enableSessionMiddleware = require('./server/middlewares/session')
 
-require('dotenv').config()
 
 const dev = process.env.NODE_ENV !== 'production'
 const serverPort = process.env.PORT || 3000
@@ -68,6 +69,13 @@ app.prepare().then(() => {
     })
 
     server.get('*', (req, res) => {
+
+        let wbPattern = /^(\/precache-manifest[^\/]+\.js|\/workbox-[^\/]+?\/{1}[^\/\n]+)$/
+
+        if (['/sw.js', '/sw-config.js'].includes(req.url) || wbPattern.test(req.url)) {
+            return app.serveStatic(req, res, path.join(__dirname, '.next', req.url))
+        }
+
         return handle(req, res)
     })
 

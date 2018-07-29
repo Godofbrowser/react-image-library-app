@@ -30,3 +30,22 @@
     padding: 25px 0;
     background-color: #E9ECEF;
 }
+
+.app-modal {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9000;
+    .app-modal-dialog {
+      margin: 25px auto;
+      width: 94%;
+      max-width: 450px;
+      min-height: 250px;
+      background: #fefefe;
+      border-radius: $card-border-radius;
+      box-shadow: $modal-content-box-shadow-xs;
+    }
+  }

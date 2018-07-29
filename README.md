@@ -7,8 +7,9 @@ See [Api repository](https://github.com/Godofbrowser/laravel-image-library-api) 
 See [App repository](https://github.com/Godofbrowser/react-image-library-app) - [live demo](http://image-library-app.herokuapp.com/)
 
 ## Key technologies
+- PWA with workbox
 - SPA with react
-- Server side rendering with nextjs
+- SSR with nextjs
 - Oauth with laravel passport
 
 ## Installation
@@ -38,6 +39,13 @@ See [App repository](https://github.com/Godofbrowser/react-image-library-app) - 
 6. Create separate endpoint for upload so user gets to fill in image details while upload and image processing is running in the background, before finally saving.
 7. Pagination
 8. Import configs and credentials (done)
+
+### Ideas
+- Add recently viewed images section to the user dashboard
+- Add related images section to the single-image page
+- Add other images by user to the single-image page
+- Add a download button single-image page
+
 
 ## Known Bug (fixed - added a helper method to check a list of guards and return the authenticated user if any)
 

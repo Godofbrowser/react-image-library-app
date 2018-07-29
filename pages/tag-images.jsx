@@ -5,11 +5,10 @@ import { loginUser } from "../store";
 // import { ROUTES } from "../server/constants/routes";
 import api from "../lib/api";
 import serverApi from "../server/api";
-import Gallery from "react-grid-gallery";
-import imageMapper from "../lib/util/image-mapper";
 
 import Layout from "../components/layout";
 import SearchForm from '../components/Search'
+import ImageGrid from "../components/ImageGrid";
 
 const TagImages = props => {
   const title = `Showing images tagged: ${decodeURIComponent(props.tagImages.tag.name)}`;
@@ -26,23 +25,8 @@ const TagImages = props => {
           </div> */}
         </div>
 
-        <div className="container">
-
-          <div
-            style={{
-              display: "block",
-              minHeight: "1px",
-              width: "100%",
-              border: "1px solid #ddd",
-              overflow: "auto",
-              marginTop: "55px"
-            }}
-          >
-            <Gallery 
-              images={props.tagImages.images.map(imageMapper)}
-              enableImageSelection={false}
-            />
-          </div>
+         <div className="container-fluid">
+          <ImageGrid images={props.images} />
         </div>
       </div>
     </Layout>
