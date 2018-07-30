@@ -152,7 +152,7 @@ class GracefulImage extends Component {
   initializeForServer() {}
 
   initializeForClient() {
-    this.addAnimationStyles();
+    // this.addAnimationStyles();
 
     // if user wants to lazy load
     if (!this.props.noLazyLoad && IS_SVG_SUPPORTED) {

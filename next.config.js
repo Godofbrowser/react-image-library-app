@@ -29,8 +29,8 @@ const webpackModifier = function (config, options) {
 
     const cachedEntry = config.entry;
     config.entry = () => cachedEntry().then(entry => {
-        if (!options.dev && entry['main.js']) {
-            entry['main.js'].push('./lib/sw-registration.js')
+        if (!options.dev && entry[CLIENT_STATIC_FILES_RUNTIME_MAIN]) {
+            entry[CLIENT_STATIC_FILES_RUNTIME_MAIN].push('./lib/sw-registration.js')
         }
 
         if (!options.isServer) {
@@ -52,28 +52,9 @@ const webpackModifier = function (config, options) {
                 swSrc: path.join(__dirname, 'lib', 'sw.js'),
                 swDest: path.join(__dirname, '.next', 'sw.js'),
                 importWorkboxFrom: 'local',
-            }),
+            })
         )
     }
-
-    // config.optimization = config.optimization || {}
-    // config.optimization.splitChunks = {
-    //     chunks: chunk => !/sw-config/.test(chunk.name),
-    //     cacheGroups: {
-    //         default: false,
-    //         vendors: false,
-    //         commons: {
-    //             name: 'commons',
-    //             chunks: 'all'
-    //         }
-    //     }
-    // }
-
-    // console.log('options: ', options.config.webpack())
-    // if (!options.isServer){
-    //     console.log('SplitChunks: ', config.plugins[7])
-    // }
-
 
     return config
 }

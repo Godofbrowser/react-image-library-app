@@ -45,6 +45,7 @@ See [App repository](https://github.com/Godofbrowser/react-image-library-app) - 
 - Add related images section to the single-image page
 - Add other images by user to the single-image page
 - Add a download button single-image page
+- Asides backend validation and response for rating, add visual feedback on frontend when user has submited rating
 
 
 ## Todo

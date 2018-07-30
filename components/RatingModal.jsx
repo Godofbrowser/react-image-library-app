@@ -19,7 +19,6 @@ const starText = [
 ];
 
 const PROP_TYPES = {
-  image: PropTypes.object.required
 };
 const DEFAULT_PROPS = {
   // image: {}
