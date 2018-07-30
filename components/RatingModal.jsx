@@ -70,7 +70,7 @@ class RatingModal extends Component {
                 <div className="form-group text-center">
                   <RatingStars
                     value={this.state.value}
-                    className="lg"
+                    className="lg d-block"
                     rateInline
                     onClick={v => this.onSelectStar(v)}
                   />

@@ -25,7 +25,7 @@ function registerListener(event, fn) {
 }
 
 function isInViewport(el) {
-  if (!el) return false
+  if (!el) return false;
   const rect = el.getBoundingClientRect();
   return (
     rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
@@ -103,10 +103,18 @@ class GracefulImage extends Component {
     const exists = document.head.querySelectorAll("[data-gracefulimage]");
 
     if (!exists.length) {
-      const styleElement = document.createElement("style");
-      styleElement.setAttribute("data-gracefulimage", "exists");
-      document.head.appendChild(styleElement);
-      styleElement.sheet.insertRule(fadeIn, styleElement.sheet.cssRules.length);
+      const style = document.createElement("style");
+      style.setAttribute("data-gracefulimage", "exists");
+
+      style.type = "text/css";
+      if (style.styleSheet) {
+        // This is required for IE8 and below.
+        style.styleSheet.cssText = fadeIn;
+      } else {
+        style.appendChild(document.createTextNode(fadeIn));
+      }
+
+      document.head.appendChild(style);
     }
   }
 
@@ -152,7 +160,7 @@ class GracefulImage extends Component {
   initializeForServer() {}
 
   initializeForClient() {
-    // this.addAnimationStyles();
+    this.addAnimationStyles();
 
     // if user wants to lazy load
     if (!this.props.noLazyLoad && IS_SVG_SUPPORTED) {
@@ -160,16 +168,18 @@ class GracefulImage extends Component {
       if (isInViewport(this.placeholderImage)) {
         this.loadImage();
       } else {
+        this.observer = new IntersectionObserver(
+          entries => {
+            let image = entries[0];
+            if (image.isIntersecting) {
+              this.throttledFunction();
+              this.observer.disconnect();
+            }
+          },
+          { rootMargin: "120px 0px", threshold: 0 }
+        );
+        this.observer.observe(this.placeholderImage);
 
-        this.observer = new IntersectionObserver(entries => {
-					let image = entries[0]
-					if (image.isIntersecting) {
-						this.throttledFunction()
-						this.observer.disconnect()
-					}
-				}, { rootMargin: '120px 0px', threshold: 0 })
-        this.observer.observe(this.placeholderImage)
-        
         registerListener("load", this.throttledFunction);
         // registerListener("scroll", this.throttledFunction);
         registerListener("resize", this.throttledFunction);
@@ -181,7 +191,7 @@ class GracefulImage extends Component {
   }
 
   clearEventListeners() {
-    this.observer && this.observer.disconnect()
+    this.observer && this.observer.disconnect();
     window.removeEventListener("load", this.throttledFunction);
     // window.removeEventListener("scroll", this.throttledFunction);
     window.removeEventListener("resize", this.throttledFunction);
