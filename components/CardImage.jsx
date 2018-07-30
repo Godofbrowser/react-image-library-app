@@ -76,7 +76,7 @@ class CardImage extends React.Component {
           <div className="card-text row">
             <div className="col-6">
               {image.rating > 0 ? (<RatingStars 
-                value={image.rating}
+                value={parseFloat(image.rating)}
                 className="sm"
                 onClick={this.onClickRatingStar}
               />) : (<a href="javascript:void(0)" onClick={this.onClickRatingStar}>No rating</a>)}

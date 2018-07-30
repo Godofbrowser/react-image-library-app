@@ -74,6 +74,7 @@ class RatingStars extends React.Component {
               </label>
             ) : (
               <label
+                key={key}
                 aria-label={`${r} stars`}
                 className={classnames(
                   "rating__label",
