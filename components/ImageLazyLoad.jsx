@@ -181,7 +181,7 @@ class GracefulImage extends Component {
         this.observer.observe(this.placeholderImage);
 
         registerListener("load", this.throttledFunction);
-        // registerListener("scroll", this.throttledFunction);
+        registerListener("scroll", this.throttledFunction);
         registerListener("resize", this.throttledFunction);
         registerListener("gestureend", this.throttledFunction); // to detect pinch on mobile devices
       }
@@ -193,7 +193,7 @@ class GracefulImage extends Component {
   clearEventListeners() {
     this.observer && this.observer.disconnect();
     window.removeEventListener("load", this.throttledFunction);
-    // window.removeEventListener("scroll", this.throttledFunction);
+    window.removeEventListener("scroll", this.throttledFunction);
     window.removeEventListener("resize", this.throttledFunction);
     window.removeEventListener("gestureend", this.throttledFunction);
   }
@@ -246,7 +246,6 @@ class GracefulImage extends Component {
   renderForServer() {
     return (
       <img
-        crossOrigin="anonymous"
         src={this.props.src}
         className={this.props.className}
         width={this.props.width}

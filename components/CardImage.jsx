@@ -1,9 +1,9 @@
 import React from "react";
-import {connect} from 'react-redux'
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import classnames from "classnames";
 import { Link as CustomLink } from "../lib/routes";
-import { toggleRatingDialog } from '../store'
+import { toggleRatingDialog } from "../store";
 import Image from "../components/ImageLazyLoad";
 import RatingStars from "./RatingStars";
 
@@ -19,19 +19,49 @@ const DEFAULT_PROPS = {
 class CardImage extends React.Component {
   constructor(props) {
     super(props);
+    this.imageCont = null;
 
-    this.onClickRatingStar = this.onClickRatingStar.bind(this)
+    this.onClickRatingStar = this.onClickRatingStar.bind(this);
+    this.computeRatio = this.computeRatio.bind(this);
+  }
+
+  componentDidMount() {
+    this.computeRatio();
+    window.addEventListener('resize', this.computeRatio)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.computeRatio)
   }
 
   onClickRatingStar() {
-    this.props.toggleRatingDialog(true, this.props.image)
+    this.props.toggleRatingDialog(true, this.props.image);
+  }
+
+  computeRatio() {
+    let w = this.props.image.dimension.width
+    let h = this.props.image.dimension.height
+
+    let r = this.imageCont.offsetWidth / w
+
+    let width = w * r
+    let height = h * r
+
+    let img = this.imageCont.querySelector('img')
+    img.style.height = (h * r) +'px'
+    img.style.display = 'inline-block';
+
+    // console.log(h, w, r, width);
+
+    return { width, height }
   }
 
   render() {
     const { image } = this.props;
+
     return (
       <div className="card image-grid-card">
-        <div className="image-cont">
+        <div className="image-cont" ref={ref => (this.imageCont = ref)}>
           <Image
             key={image.id}
             className="card-img-top"
@@ -75,12 +105,18 @@ class CardImage extends React.Component {
 
           <div className="card-text row">
             <div className="col-6">
-              {image.rating > 0 ? (<RatingStars 
-                value={parseFloat(image.rating)}
-                className="sm"
-                onClick={this.onClickRatingStar}
-              />) : (<a href="javascript:void(0)" onClick={this.onClickRatingStar}>No rating</a>)}
-              {image.rating > 0 ? (<span>({image.rating})</span>) : ''}
+              {image.rating > 0 ? (
+                <RatingStars
+                  value={parseFloat(image.rating)}
+                  className="sm"
+                  onClick={this.onClickRatingStar}
+                />
+              ) : (
+                <a href="javascript:void(0)" onClick={this.onClickRatingStar}>
+                  No rating
+                </a>
+              )}
+              {image.rating > 0 ? <span>({image.rating})</span> : ""}
             </div>
             <div className="col-6 text-right text-truncate">
               <small className="text-muted">
@@ -98,11 +134,15 @@ CardImage.propTypes = PROP_TYPES;
 CardImage.defaultProps = DEFAULT_PROPS;
 
 const mapStateToProps = state => {
-  return { user: state.user }
-}
+  return { user: state.user };
+};
 
 const mapDispatchToProps = dispatch => ({
-  toggleRatingDialog: (status, image) => dispatch(toggleRatingDialog(status, image))
-})
+  toggleRatingDialog: (status, image) =>
+    dispatch(toggleRatingDialog(status, image))
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(CardImage)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CardImage);
