@@ -10,19 +10,19 @@ import RatingStars from "./RatingStars";
 import Image from "./ImageLazyLoad";
 
 const starText = [
-    '',
-    'I hate it',
-    'I dislike it',
-    'I like it',
-    'I love it',
-    'I think it\'s amazing'
-]
+  "",
+  "I hate it",
+  "I dislike it",
+  "I like it",
+  "I love it",
+  "I think it's amazing"
+];
 
 const PROP_TYPES = {
   image: PropTypes.object.required
 };
 const DEFAULT_PROPS = {
-    // image: {}
+  // image: {}
 };
 
 class RatingModal extends Component {
@@ -36,15 +36,24 @@ class RatingModal extends Component {
     this.onSelectStar = this.onSelectStar.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  componentDidMount() {
+    document.body.classList.add('no-scroll')
+  }
+
+  componentWillUnmount() {
+    document.body.classList.remove('no-scroll')
+  }
+
   handleSubmit(e) {
     e.preventDefault();
-    return this.props.submitRating(this.state.value);
+    return this.props.submitRating(this.props.image, this.state.value);
   }
 
   onSelectStar(v) {
     this.setState({
-        value: v
-    })
+      value: v
+    });
   }
 
   render() {
@@ -60,7 +69,12 @@ class RatingModal extends Component {
             <form onSubmit={this.handleSubmit}>
               <div className="col-12 py-4 text-center">
                 <div className="form-group text-center">
-                  <RatingStars value={this.state.value} className="lg" rateInline onClick={ v => this.onSelectStar(v)}/>
+                  <RatingStars
+                    value={this.state.value}
+                    className="lg"
+                    rateInline
+                    onClick={v => this.onSelectStar(v)}
+                  />
                   <small>{starText[Math.ceil(this.state.value)]}</small>
                 </div>
                 <div>
@@ -95,14 +109,16 @@ RatingModal.propTypes = PROP_TYPES;
 RatingModal.defaultProps = DEFAULT_PROPS;
 
 const mapStateToProps = state => {
-  return { user: state.user };
+  return { user: state.user, image: state.ratingDialog.image };
 };
 
 const mapDispatchToProps = dispatch => ({
-  toggleRatingDialog: (status, image) =>
-    dispatch(toggleRatingDialog(status, image)),
-    submitRating: (value) =>
-    dispatch(submitRating(value))
+  toggleRatingDialog(status, image) {
+    dispatch(toggleRatingDialog(status, image));
+  },
+  submitRating(image, value) {
+    dispatch(submitRating(dispatch, image, value));
+  }
 });
 
 export default connect(

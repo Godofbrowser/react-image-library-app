@@ -94,8 +94,8 @@ export const toggleRatingDialog = (status = null, image = null) => {
     }
 }
 
-export const submitRating = (dispatch, value) => {
-    api.images.submitRating(value)
+export const submitRating = (dispatch, image, value) => {
+    api.images.submitRating(image.id, value)
     .then(resp => {
         toast.success(resp.data.info || 'Your rating has been saved')
         // dispatch(ratingSuccess(resp.data.data.id))

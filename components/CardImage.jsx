@@ -75,15 +75,16 @@ class CardImage extends React.Component {
 
           <div className="card-text row">
             <div className="col-6">
-              <RatingStars 
-                value={image.tags.length}
+              {image.rating > 0 ? (<RatingStars 
+                value={image.rating}
                 className="sm"
                 onClick={this.onClickRatingStar}
-              />
+              />) : (<a href="javascript:void(0)" onClick={this.onClickRatingStar}>No rating</a>)}
+              {image.rating > 0 ? (<span>({image.rating})</span>) : ''}
             </div>
             <div className="col-6 text-right text-truncate">
               <small className="text-muted">
-                <i className="fa fa-user" /> [user] whfhw wiuwei wifuwi f iwuiwe uwi weieuwi
+                <i className="fa fa-user" /> {image.user.name}
               </small>
             </div>
           </div>

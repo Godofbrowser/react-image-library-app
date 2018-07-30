@@ -1,4 +1,6 @@
 .rating-stars {
+    display: inline-block;
+    vertical-align: middle;
     &.sm {
         .rating__label {
             font-size: 18px;
@@ -29,8 +31,7 @@
     }
     /* hide radio inputs */
     .rating__input {
-        display: none;
-        // position: absolute !important;
+        display: none; // position: absolute !important;
         // left: -9999px !important;
     }
     /* set icon padding and size */
@@ -57,7 +58,7 @@
     .rating-group:hover {
         .rating__label.selectable {
             .rating__icon--star {
-                color:orange;
+                color: orange;
             }
         }
     }

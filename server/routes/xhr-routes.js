@@ -216,4 +216,15 @@ router.get('/tag/:slug/images', (req, res) => {
   .catch(err => errorHandler(err, req, res))
 })
 
+router.post('/image/:id/rating', (req, res) => {
+  api.images.submitRating(req.params.id, req.body.value)
+  .then(resp => {
+    res.json({
+      status: 'success',
+      data: resp.data.data
+    })
+  })
+  .catch(err => errorHandler(err, req, res))
+})
+
 module.exports = router
